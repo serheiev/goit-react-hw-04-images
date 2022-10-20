@@ -18,7 +18,6 @@ export const App = () => {
   const [modal, setModal] = useState({ isOpen: false, src: '', alt: '' });
 
   useEffect(() => {
-    // fetchGallery(query, page);
     const fetchGallery = async (query, page) => {
       try {
         setIsLoading(true);
@@ -31,7 +30,7 @@ export const App = () => {
         if (page === 1) {
           setImages(hits);
         } else {
-          setImages([...images, ...hits]);
+          setImages(prevImages => [...prevImages, ...hits]);
         }
       } catch {
         setError(errorMessage);
@@ -44,7 +43,7 @@ export const App = () => {
       return;
     }
     fetchGallery(query, page);
-  }, [query, page, images]);
+  }, [query, page]);
 
   // const fetchGallery = async (query, page) => {
   //   try {
