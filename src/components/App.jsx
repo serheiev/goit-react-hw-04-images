@@ -18,32 +18,54 @@ export const App = () => {
   const [modal, setModal] = useState({ isOpen: false, src: '', alt: '' });
 
   useEffect(() => {
+    // fetchGallery(query, page);
+    const fetchGallery = async (query, page) => {
+      try {
+        setIsLoading(true);
+        const { hits } = await fetchApi(query, page);
+
+        if (hits.length === 0) {
+          throw new Error(errorMessage);
+        }
+
+        if (page === 1) {
+          setImages(hits);
+        } else {
+          setImages([...images, ...hits]);
+        }
+      } catch {
+        setError(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (query.trim() === '') {
       return;
     }
     fetchGallery(query, page);
-  }, [query, page]);
+  }, [query, page, images]);
 
-  const fetchGallery = async (query, page) => {
-    try {
-      setIsLoading(true);
-      const { hits } = await fetchApi(query, page);
+  // const fetchGallery = async (query, page) => {
+  //   try {
+  //     setIsLoading(true);
+  //     const { hits } = await fetchApi(query, page);
 
-      if (hits.length === 0) {
-        throw new Error(errorMessage);
-      }
+  //     if (hits.length === 0) {
+  //       throw new Error(errorMessage);
+  //     }
 
-      if (page === 1) {
-        setImages(hits);
-      } else {
-        setImages([...images, ...hits]);
-      }
-    } catch {
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     if (page === 1) {
+  //       setImages(hits);
+  //     } else {
+  //       setImages([...images, ...hits]);
+  //     }
+  //   } catch {
+  //     setError(errorMessage);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const chengeNameSubmit = query => {
     setQuery(query);
