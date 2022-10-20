@@ -1,31 +1,31 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 import s from './Modal.module.scss';
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.closeModalByKey);
-  }
+export const Modal = ({ closeModal, src, alt }) => {
+  useEffect(() => {
+    window.addEventListener('keydown', closeModalByKey);
+    return () => window.removeEventListener('keydown', closeModalByKey);
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.closeModalByKey);
-  }
-
-  closeModalByKey = e => {
+  const closeModalByKey = e => {
     if (e.key === 'Escape') {
-      this.props.closeModal();
+      closeModal();
     }
   };
 
-  render() {
-    const { closeModal, src, alt } = this.props;
-    return (
-      <>
-        <div className={s.overlay} onClick={() => closeModal()}>
-          <div className={s.modal}>
-            <img src={src} alt={alt} />
-          </div>
-        </div>
-      </>
-    );
-  }
-}
+  return (
+    <div className={s.overlay} onClick={() => closeModal()}>
+      <div className={s.modal}>
+        <img src={src} alt={alt} />
+      </div>
+    </div>
+  );
+};
+
+Modal.propTypes = {
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  closeModal: PropTypes.func.isRequired,
+}.isRequired;
